@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
+//
 // Note that mainActivity is empty because all the work done inside the fragment
 public class MainActivity extends AppCompatActivity implements CountriesAdapter.ICountriesAdapterListener{
 
