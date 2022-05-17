@@ -1,6 +1,5 @@
 package com.example.ex8;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,13 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 
 
 public class DetailsFragment extends Fragment {
@@ -32,24 +26,48 @@ public class DetailsFragment extends Fragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+/** *
+ * https://developer.android.com/topic/libraries/architecture/livedata
+ */
 
+/***
+ * https://developer.android.com/topic/libraries/architecture/viewmodel.html#sharing
+ */
         detailsTextView = view.findViewById(R.id.country_details_text_view);
-        myViewModel= MainViewModel.getInstance(getActivity().getApplication());
+        myViewModel = MainViewModel.getInstance(getActivity().getApplication());
+
+        // OBSERVE
         Observer<Country> userListUpdateObserver = new Observer<Country>() {
             @Override
             public void onChanged(Country country) {
-                detailsTextView.setText(country.getDetails());
+                if(country != null){
+                    Log.i("TEST load", "da");
+                    detailsTextView.setText(country.getDetails());
+                }else{
+                    detailsTextView.setText("");
+
+                }
+
             }
         };
 
-        myViewModel.getItemSelected().observe(getViewLifecycleOwner(),userListUpdateObserver);
+        // OBSERVE
+        Observer<Integer> indexObserve = new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer index) {
+                Log.i("TEST load", "da");
+                if(index == -1 ){
+                    //detailsTextView.setText("");
+                }
+            }
+        };
+
+        myViewModel.getItemSelected().observe(getViewLifecycleOwner(), userListUpdateObserver);
+        myViewModel.getPositionSelected().observe(getViewLifecycleOwner(), indexObserve);
 
         super.onViewCreated(view, savedInstanceState);
-
-
 
     }
 
