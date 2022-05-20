@@ -13,11 +13,9 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-//
-// Note that mainActivity is empty because all the work done inside the fragment
+
 public class MainActivity extends AppCompatActivity implements CountriesAdapter.ICountriesAdapterListener{
 
-    CountriesAdapter countriesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.world_settings, menu);
         inflater.inflate(R.menu.settings, menu);
-
         inflater.inflate(R.menu.menu_exit, menu);
 
         return true;
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.exit:
                 MyExit newFragment = MyExit.newInstance();
                 newFragment.show(getSupportFragmentManager(), "exitDialog");
@@ -59,13 +56,12 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
                 }
 
                 // This is the parent activity
+                // Pay attention on note that the SettingFragment has
                 ft.add(R.id.mainActivity, new SettingFragment())
                         .addToBackStack(null)
                         .commit();
-
                 break;
         }
-
         return  true;
     }
 
@@ -88,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
 
 
     // Nested class to show settings frag
+    //Note: This class is Knows how to automatically and independently handle all the clicks
+    // and changes that the user makes and saves them in a Preference file
     public static class SettingFragment extends PreferenceFragmentCompat {
 
         @Override

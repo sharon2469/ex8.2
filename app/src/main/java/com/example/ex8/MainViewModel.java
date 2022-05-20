@@ -145,9 +145,6 @@ public class MainViewModel extends ViewModel {
         countryLiveData.setValue(countryList);
     }
 
-
-
-
     public String getRemoveListByFile() {
         String ret = "";
 
@@ -173,14 +170,13 @@ public class MainViewModel extends ViewModel {
 
     public void setRemoveListByFile(String index)
     {
-
         if(!Arrays.asList(intArr).contains(Integer.parseInt(index)))
         {
-            String removelist=getRemoveListByFile();
+            String removelist = getRemoveListByFile();
             if(removelist.length() == 0)
                 removelist = index;
             else
-                removelist+= "," + index;
+                removelist += "," + index;
             try {
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("remove.txt", Context.MODE_PRIVATE));
                 outputStreamWriter.write(removelist);
@@ -196,8 +192,6 @@ public class MainViewModel extends ViewModel {
 
 
     private void clearListByFile() {
-
-
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("remove.txt", Context.MODE_PRIVATE));
             outputStreamWriter.write("");
