@@ -8,6 +8,11 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 //
 // Note that mainActivity is empty because all the work done inside the fragment
 public class MainActivity extends AppCompatActivity implements CountriesAdapter.ICountriesAdapterListener{
@@ -28,8 +33,10 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.menu_exit, menu);
         inflater.inflate(R.menu.world_settings, menu);
+        inflater.inflate(R.menu.settings, menu);
+
+        inflater.inflate(R.menu.menu_exit, menu);
 
         return true;
     }
@@ -42,7 +49,20 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
                 newFragment.show(getSupportFragmentManager(), "exitDialog");
                 break;
             case R.id.worldSettings:
-                //countriesAdapter.reloadCounteyList(this);
+                break;
+            case R.id.settings: // Lab 9
+                FragmentManager fm = getSupportFragmentManager();
+                Fragment toHide = fm.findFragmentById(R.id.frag_container);
+                FragmentTransaction ft = fm.beginTransaction();
+                if (toHide != null) {
+                    ft.hide(toHide);    // hide main fragment.
+                }
+
+                // This is the parent activity
+                ft.add(R.id.mainActivity, new SettingFragment())
+                        .addToBackStack(null)
+                        .commit();
+
                 break;
         }
 
@@ -62,6 +82,17 @@ public class MainActivity extends AppCompatActivity implements CountriesAdapter.
                     addToBackStack("BBB").//cause the back button scrolling through the loaded fragments
                     commit();
             getSupportFragmentManager().executePendingTransactions();
+        }
+    }
+
+
+
+    // Nested class to show settings frag
+    public static class SettingFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.settings_pref, rootKey);
         }
 
     }

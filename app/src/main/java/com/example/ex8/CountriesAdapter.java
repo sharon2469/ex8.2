@@ -1,11 +1,11 @@
 package com.example.ex8;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.CountriesViewHolder> {
 
     private static ArrayList<Country> countryList;
     private int selectedRow = -1;
-    private MainViewModel viewModel;
+    private MainViewModel myViewModel;
     private Application Mycontext;
     private  ICountriesAdapterListener listener;
     private CountriesViewHolder viewHolder;
@@ -41,14 +40,12 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
         return viewHolder;
     }
 
-    public CountriesAdapter(Application application, Context context) {
+    public CountriesAdapter(Application application, Context context, Activity activity, boolean checkBoxFilter) {
         countryList = CountryXMLParser.parseCountries(application);
         Mycontext = application;
-        viewModel = MainViewModel.getInstance(Mycontext);
-        countryList = viewModel.getCountriesLiveData().getValue();
+        myViewModel = MainViewModel.getInstance(application, Mycontext, activity, checkBoxFilter);
+        countryList = myViewModel.getCountriesLiveData().getValue();
         this.context = context;
-        viewModel = MainViewModel.getInstance(application);
-
     }
 
 
@@ -59,8 +56,6 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
         LayoutInflater inflater = LayoutInflater.from(parent.getContext()); // instance of the inflater
         View countryView = inflater.inflate(R.layout.country_item, parent, false); // get view of the country view object
         viewHolder = new CountriesViewHolder(countryView);
-
-
 
         return viewHolder; // return county view holder
     }
@@ -79,7 +74,7 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
                 selectedRow = index;
             }
         };
-        viewModel.getPositionSelected().observe((LifecycleOwner)context, observeSelectedIndex);
+        myViewModel.getPositionSelected().observe((LifecycleOwner)context, observeSelectedIndex);
 
 
         if (selectedRow == position){
@@ -98,9 +93,9 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
                 selectedRow = position;
                 notifyItemChanged(selectedRow);
                 notifyDataSetChanged();
-                viewModel.setItemSelect(country);
-                viewModel.setPositionSelected(selectedRow);
-                listener.countryClicked();
+                myViewModel.setItemSelect(country);
+                myViewModel.setPositionSelected(selectedRow);
+                listener.countryClicked(); // This what will open the frag from the MainActivity listener
             }
         });
 
@@ -110,15 +105,25 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
             public boolean onLongClick(View v) {
                 int position = holder.getAdapterPosition();
                 System.out.println(getItemCount());
+
+                boolean removeList =  PreferenceManager.getDefaultSharedPreferences(Mycontext)
+                        .getBoolean("remember", false);
+                if(removeList)
+                {
+                    myViewModel.setRemoveListBySP(String.valueOf(position));
+                      //myViewModel.setRemoveListByFile(String.valueOf(position));
+
+                }
+
+                // ************ lab 8
                 countryList.remove(position);
 
-
-                viewModel.setCountryLiveData(countryList);
+                myViewModel.setCountryLiveData(countryList);
 
                 // we must set it -1 becuase the item was removed and this will help us to remove info data from fragment
-                viewModel.setPositionSelected(-1);
+                myViewModel.setPositionSelected(-1);
 
-                viewModel.setItemSelect(null);
+                myViewModel.setItemSelect(null);
 
                 // this logic will keep the selected row select when change the position index
                 if (position < selectedRow){

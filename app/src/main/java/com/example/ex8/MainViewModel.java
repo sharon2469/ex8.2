@@ -1,20 +1,30 @@
 package com.example.ex8;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainViewModel extends ViewModel {
 
     private static MainViewModel instance;
+
+    public Context context;
+    public Activity activity;
 
     // ******* The observable vars *********************
 
@@ -26,11 +36,24 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<Country> indexItemSelected;
     private MutableLiveData<Integer> positionSelected;
     // *****************************
+    // lab 9
+    private MutableLiveData<Boolean> saveRemoved;
+    private MutableLiveData<ArrayList<String>> removedCountries;
+    private int[] intArr;
 
-    public MainViewModel(@NonNull Application application) {
+
+
+
+
+    public MainViewModel(@NonNull Application application, Context context, Activity activity, boolean checkBoxFilter) {
         //super(application);
         // call your Rest API in init method
-        init(application);
+        this.activity = activity;
+        this.context = context;
+
+        init(application, checkBoxFilter);
+
+
     }
 
     public MutableLiveData<ArrayList<Country>>  getCountryLiveData() {
@@ -61,23 +84,163 @@ public class MainViewModel extends ViewModel {
         countryLiveData.setValue(list);
     }
 
-    public static MainViewModel getInstance(Application application){
+    // Pay attention that MainViewModel is singleton it helps
+    public static MainViewModel getInstance(Application application, Context context, Activity activity, boolean checkBoxFilter){
         if(instance ==null){
-            instance =new MainViewModel(application);
+            instance =new MainViewModel(application, context, activity, checkBoxFilter);
         }
+
         return instance;
     }
-
-
     // This use the setValue
-    public void init(Application application){
+    public void init(Application application, boolean checkBoxFilter){
         countryLiveData = new MutableLiveData<>();
         indexItemSelected = new MutableLiveData<>();
         positionSelected = new MutableLiveData<>();
         positionSelected.setValue(-1);
-        countryLiveData.setValue(CountryXMLParser.parseCountries(application.getApplicationContext()));
+
+
+
+        // lab 9
+        saveRemoved = new MutableLiveData<>();
+        saveRemoved.setValue(checkBoxFilter);
+        removedCountries = new MutableLiveData<>();
+        checkRemoveList(application);
     }
 
 
+
+    // Lab 9
+    public void checkRemoveList(Application application){
+        ArrayList<Country> countryList = CountryXMLParser.parseCountries(application);
+
+        if(saveRemoved.getValue()) {
+
+            //String s = getRemoveListByFile();
+            String s = getRemoveListBySP();
+
+            String[] removeArray = s.split(",",countryList.size());
+            int[] intArr = new int[removeArray.length];
+
+            int j=0;
+            for(int i=0 ; i < removeArray.length ; i++) {
+                if( !removeArray[i].equals("") ) {
+                    if( !Arrays.asList(intArr).contains(Integer.parseInt(removeArray[i])) ) {
+                        intArr[j]= Integer.parseInt(removeArray[i]);
+                        j++;
+                    }
+                }
+            }
+            Arrays.sort(intArr);
+            for(int i = intArr.length-1 ; i>=0 ; i--) {
+                countryList.remove(intArr[i]);
+            }
+        }
+        else {
+            //clearListByFile();
+            clearListBySP();
+        }
+
+
+        countryLiveData.setValue(countryList);
+    }
+
+
+
+
+    public String getRemoveListByFile() {
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput("remove.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                int size = inputStream.available();
+                char[] buffer = new char[size];
+
+                inputStreamReader.read(buffer);
+
+                inputStream.close();
+                ret = new String(buffer);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public void setRemoveListByFile(String index)
+    {
+
+        if(!Arrays.asList(intArr).contains(Integer.parseInt(index)))
+        {
+            String removelist=getRemoveListByFile();
+            if(removelist.length() == 0)
+                removelist = index;
+            else
+                removelist+= "," + index;
+            try {
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("remove.txt", Context.MODE_PRIVATE));
+                outputStreamWriter.write(removelist);
+                outputStreamWriter.flush();
+                outputStreamWriter.close();
+            }
+            catch (IOException e) {
+                Log.e("Exception", "File write failed: " + e.toString());
+            }
+        }
+
+    }
+
+
+    private void clearListByFile() {
+
+
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("remove.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write("");
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+
+    }
+
+    public void setRemoveListBySP(String index)
+    {
+        {
+            if(!Arrays.asList(intArr).contains(Integer.parseInt(index)))
+            {
+                String removelist = getRemoveListBySP();
+                if(removelist.length() == 0)
+                    removelist = index;
+                else
+                    removelist += "," + index;
+                SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("removelist", removelist);
+                editor.apply();
+            }
+        }
+
+
+    }
+    public String getRemoveListBySP() {
+
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getString("removelist", "");
+    }
+
+    private void clearListBySP() {
+
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("removelist", "");
+        editor.apply();
+    }
 
 }

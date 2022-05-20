@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +42,12 @@ public class CountriesFragment extends Fragment  {
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        countriesAdapter = new CountriesAdapter(getActivity().getApplication(), getContext()); // create an instance of the adapter
+        // lab 9
+        boolean checkBoxFilter =  PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getBoolean("remember", false);
+
+
+        countriesAdapter = new CountriesAdapter(getActivity().getApplication(), getContext(), getActivity(), checkBoxFilter); // create an instance of the adapter
         recyclerView.setAdapter(countriesAdapter); // set that adapter for the recycle view
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // What is the position of the list vertical or linear
 

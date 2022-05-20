@@ -1,5 +1,6 @@
 package com.example.ex8;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-
+import androidx.preference.PreferenceManager;
 
 
 public class DetailsFragment extends Fragment {
@@ -28,6 +29,9 @@ public class DetailsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        boolean checkBoxFilter =  PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getBoolean("remember", false);
+
 /** *
  * https://developer.android.com/topic/libraries/architecture/livedata
  */
@@ -35,8 +39,9 @@ public class DetailsFragment extends Fragment {
 /***
  * https://developer.android.com/topic/libraries/architecture/viewmodel.html#sharing
  */
+
         detailsTextView = view.findViewById(R.id.country_details_text_view);
-        myViewModel = MainViewModel.getInstance(getActivity().getApplication());
+        myViewModel = MainViewModel.getInstance(getActivity().getApplication(),getContext(), getActivity(), checkBoxFilter);
 
         // OBSERVE
         Observer<Country> userListUpdateObserver = new Observer<Country>() {

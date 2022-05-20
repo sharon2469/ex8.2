@@ -7,19 +7,21 @@
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2025" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/drawable/lines.xml" value="0.2025" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/drawable/lines2.xml" value="0.3965" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout-land/activity_main.xml" value="0.30864197530864196" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/activity_main.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/countries_fragment.xml" value="0.1705685618729097" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/countriesdetailsfrag.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/countriesfrag.xml" value="0.48494983277591974" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/country_item.xml" value="0.5541666666666667" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/exit_dialog.xml" value="0.5541666666666667" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/menu_exit.xml" value="0.1" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/menu_settings.xml" value="0.5192708333333333" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/settings.xml" value="0.1111111111111111" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/world_settings.xml" value="0.5541666666666667" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout-land/activity_main.xml" value="0.30864197530864196" />
-        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/activity_main.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/details_fragment.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/exit_dialog.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/fragment_settings_fragment.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/layout/settings_frag.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/menu_exit.xml" value="0.33" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/menu_settings.xml" value="0.5192708333333333" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/settings.xml" value="0.25" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/menu/world_settings.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/Sharon/AndroidCourse/ex8/app/src/main/res/xml/settings_pref.xml" value="0.5541666666666667" />
       </map>
     </option>
   </component>

@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">World Explorer</string>
     <string name="exitTxt">Exit</string>
-    <string name="settingsTxt">settings</string>
+    <string name="settingsTxt">Settings</string>
+    <string name="ok">Accept</string>
+    <string name="cancel">cancel</string>
+
     <string name="confirmationTxt">Are you sure?</string>
     <string name="method_inner_file">Using inner file saving method.</string>
     <string name="method_sp">Using SP saving method.</string>
