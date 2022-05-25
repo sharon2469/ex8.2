@@ -1,8 +1,6 @@
 package com.example.ex8;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+
+import java.util.ArrayList;
 
 
 public class DetailsFragment extends Fragment {
@@ -29,6 +30,7 @@ public class DetailsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        // lab 9
         boolean checkBoxFilter =  PreferenceManager.getDefaultSharedPreferences(getContext())
                 .getBoolean("remember", false);
 
@@ -43,34 +45,30 @@ public class DetailsFragment extends Fragment {
         detailsTextView = view.findViewById(R.id.country_details_text_view);
         myViewModel = MainViewModel.getInstance(getActivity().getApplication(),getContext(), getActivity(), checkBoxFilter);
 
-        // OBSERVE
-        Observer<Country> userListUpdateObserver = new Observer<Country>() {
-            @Override
-            public void onChanged(Country country) {
-                if(country != null){
-                    Log.i("TEST load", "da");
-                    detailsTextView.setText(country.getDetails());
-                }else{
-                    detailsTextView.setText("");
 
-                }
-
-            }
-        };
 
         // OBSERVE
-        Observer<Integer> indexObserve = new Observer<Integer>() {
+        // Here we will observe and update the selected row
+        Observer<Integer> observeSelectedIndex = new Observer<Integer>() {
             @Override
             public void onChanged(Integer index) {
-                Log.i("TEST load", "da");
-                if(index == -1 ){
-                    //detailsTextView.setText("");
+                int selected = myViewModel.getPositionSelected().getValue();
+                ArrayList<Country> list  = myViewModel.getCountryLiveData().getValue();
+                if(selected != -1){
+                    Country country = list.get(selected);
+
+                    if(country != null){
+                        detailsTextView.setText(country.getDetails());
+                    }
+                }else{
+                    detailsTextView.setText("");
                 }
-            }
+                }
+
+
         };
 
-        myViewModel.getItemSelected().observe(getViewLifecycleOwner(), userListUpdateObserver);
-        myViewModel.getPositionSelected().observe(getViewLifecycleOwner(), indexObserve);
+        myViewModel.getPositionSelected().observe((LifecycleOwner)getContext(), observeSelectedIndex);
 
         super.onViewCreated(view, savedInstanceState);
 

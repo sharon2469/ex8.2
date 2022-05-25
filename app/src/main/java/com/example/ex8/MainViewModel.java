@@ -7,9 +7,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class MainViewModel extends ViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     private static MainViewModel instance;
 
@@ -33,7 +33,6 @@ public class MainViewModel extends ViewModel {
     //  Usually, MutableLiveData is used in the ViewModel and then the ViewModel only exposes
 
     private MutableLiveData<ArrayList<Country>>  countryLiveData ;
-    private MutableLiveData<Country> indexItemSelected;
     private MutableLiveData<Integer> positionSelected;
     // *****************************
     // lab 9
@@ -46,11 +45,13 @@ public class MainViewModel extends ViewModel {
 
 
     public MainViewModel(@NonNull Application application, Context context, Activity activity, boolean checkBoxFilter) {
+        super(application);
         //super(application);
         // call your Rest API in init method
         this.activity = activity;
         this.context = context;
 
+        // Lab 8 + Lab 9
         init(application, checkBoxFilter);
 
 
@@ -60,17 +61,10 @@ public class MainViewModel extends ViewModel {
         return countryLiveData;
     }
 
-    public MutableLiveData<Country> getItemSelected() {
-        return indexItemSelected;
-    }
-
     public LiveData<ArrayList<Country>> getCountriesLiveData() {
         return countryLiveData;
     }
 
-    public void setItemSelect(Country country){
-        indexItemSelected.setValue(country);
-    }
 
     public void setPositionSelected(Integer index){
         positionSelected.setValue(index);
@@ -87,15 +81,13 @@ public class MainViewModel extends ViewModel {
     // Pay attention that MainViewModel is singleton it helps
     public static MainViewModel getInstance(Application application, Context context, Activity activity, boolean checkBoxFilter){
         if(instance ==null){
-            instance =new MainViewModel(application, context, activity, checkBoxFilter);
+            instance = new MainViewModel(application, context, activity, checkBoxFilter);
         }
-
         return instance;
     }
     // This use the setValue
     public void init(Application application, boolean checkBoxFilter){
         countryLiveData = new MutableLiveData<>();
-        indexItemSelected = new MutableLiveData<>();
         positionSelected = new MutableLiveData<>();
         positionSelected.setValue(-1);
 
@@ -105,12 +97,12 @@ public class MainViewModel extends ViewModel {
         saveRemoved = new MutableLiveData<>();
         saveRemoved.setValue(checkBoxFilter);
         removedCountries = new MutableLiveData<>();
-        checkRemoveList(application);
+        checkRemoveList(application); // this is also connect to lab 8 and 9
     }
 
 
 
-    // Lab 9
+    // Lab 8 (only set the country list) + Lab 9 ( remove from original list the remove country)
     public void checkRemoveList(Application application){
         ArrayList<Country> countryList = CountryXMLParser.parseCountries(application);
 

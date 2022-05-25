@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -32,16 +31,8 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
     private Context context;
 
 
-    public int getSelectedRow (){
-        return selectedRow;
-    }
-
-    public CountriesViewHolder getViewHolder(){
-        return viewHolder;
-    }
-
     public CountriesAdapter(Application application, Context context, Activity activity, boolean checkBoxFilter) {
-        countryList = CountryXMLParser.parseCountries(application);
+        //countryList = CountryXMLParser.parseCountries(application);
         Mycontext = application;
         myViewModel = MainViewModel.getInstance(application, Mycontext, activity, checkBoxFilter);
         countryList = myViewModel.getCountriesLiveData().getValue();
@@ -74,6 +65,7 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
                 selectedRow = index;
             }
         };
+
         myViewModel.getPositionSelected().observe((LifecycleOwner)context, observeSelectedIndex);
 
 
@@ -84,17 +76,13 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
         }
 
 
-
-
-
         holder.row_linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedRow = position;
                 notifyItemChanged(selectedRow);
                 notifyDataSetChanged();
-                myViewModel.setItemSelect(country);
-                myViewModel.setPositionSelected(selectedRow);
+                myViewModel.setPositionSelected(selectedRow); // Lab 8
                 listener.countryClicked(); // This what will open the frag from the MainActivity listener
             }
         });
@@ -120,21 +108,18 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
 
                 myViewModel.setCountryLiveData(countryList);
 
-                // we must set it -1 becuase the item was removed and this will help us to remove info data from fragment
-                myViewModel.setPositionSelected(-1);
+                // Here we do some logic
+                // if the position equals to the current selected row so we need to unselected completely the selected row
+                if(position == myViewModel.getPositionSelected().getValue()){
+                    myViewModel.setPositionSelected(-1);
+                }
 
-                myViewModel.setItemSelect(null);
-
-                // this logic will keep the selected row select when change the position index
-                if (position < selectedRow){
-                    selectedRow--;
-                } else if (position == selectedRow){
-                    selectedRow = -1;
+                if(position < myViewModel.getPositionSelected().getValue()){
+                    myViewModel.setPositionSelected(myViewModel.getPositionSelected().getValue()-1);
                 }
 
 
                 notifyDataSetChanged();
-
                 return true;
             }
         });
@@ -189,8 +174,6 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
         Resources resources = context.getResources();
        return resources.getIdentifier(drawableName, "drawable", context.getPackageName());
     }
-
-
 
 
 
