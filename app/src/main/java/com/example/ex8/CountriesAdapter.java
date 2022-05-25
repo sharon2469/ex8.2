@@ -32,7 +32,7 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
 
 
     public CountriesAdapter(Application application, Context context, Activity activity, boolean checkBoxFilter) {
-        //countryList = CountryXMLParser.parseCountries(application);
+
         Mycontext = application;
         myViewModel = MainViewModel.getInstance(application, Mycontext, activity, checkBoxFilter);
         countryList = myViewModel.getCountriesLiveData().getValue();
@@ -92,14 +92,12 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
             @Override
             public boolean onLongClick(View v) {
                 int position = holder.getAdapterPosition();
-                System.out.println(getItemCount());
 
-                boolean removeList =  PreferenceManager.getDefaultSharedPreferences(Mycontext)
-                        .getBoolean("remember", false);
+                boolean removeList =  PreferenceManager.getDefaultSharedPreferences(Mycontext).getBoolean("remember", false);
                 if(removeList)
                 {
-                    myViewModel.setRemoveListBySP(String.valueOf(position));
-                      //myViewModel.setRemoveListByFile(String.valueOf(position));
+                    //myViewModel.setRemoveListBySP(String.valueOf(position));
+                      myViewModel.setRemoveListByFile(String.valueOf(position));
 
                 }
 

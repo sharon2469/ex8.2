@@ -32,8 +32,7 @@ public class CountriesFragment extends Fragment  {
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // lab 9
-        boolean checkBoxFilter =  PreferenceManager.getDefaultSharedPreferences(getContext())
-                .getBoolean("remember", false);
+        boolean checkBoxFilter =  PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("remember", false);
 
 
         countriesAdapter = new CountriesAdapter(getActivity().getApplication(), getContext(), getActivity(), checkBoxFilter); // create an instance of the adapter

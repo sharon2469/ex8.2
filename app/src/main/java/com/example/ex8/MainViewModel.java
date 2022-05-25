@@ -78,6 +78,10 @@ public class MainViewModel extends AndroidViewModel {
         countryLiveData.setValue(list);
     }
 
+    public boolean getSaveRemove(){
+        return saveRemoved.getValue();
+    }
+
     // Pay attention that MainViewModel is singleton it helps
     public static MainViewModel getInstance(Application application, Context context, Activity activity, boolean checkBoxFilter){
         if(instance ==null){
@@ -108,8 +112,8 @@ public class MainViewModel extends AndroidViewModel {
 
         if(saveRemoved.getValue()) {
 
-            //String s = getRemoveListByFile();
-            String s = getRemoveListBySP();
+            String s = getRemoveListByFile();
+            //String s = getRemoveListBySP();
 
             String[] removeArray = s.split(",",countryList.size());
             int[] intArr = new int[removeArray.length];
@@ -123,20 +127,22 @@ public class MainViewModel extends AndroidViewModel {
                     }
                 }
             }
+
             Arrays.sort(intArr);
             for(int i = intArr.length-1 ; i>=0 ; i--) {
                 countryList.remove(intArr[i]);
             }
         }
         else {
-            //clearListByFile();
-            clearListBySP();
+            clearListByFile();
+            //clearListBySP();
         }
 
 
         countryLiveData.setValue(countryList);
     }
 
+    // ******************** file ************
     public String getRemoveListByFile() {
         String ret = "";
 
@@ -196,6 +202,8 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
+
+    // ******************* SP **********************
     public void setRemoveListBySP(String index)
     {
         {
