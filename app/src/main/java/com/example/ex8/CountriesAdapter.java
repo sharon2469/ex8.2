@@ -94,11 +94,10 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
                 int position = holder.getAdapterPosition();
 
                 boolean removeList =  PreferenceManager.getDefaultSharedPreferences(Mycontext).getBoolean("remember", false);
-                if(removeList)
-                {
-                    //myViewModel.setRemoveListBySP(String.valueOf(position));
-                      myViewModel.setRemoveListByFile(String.valueOf(position));
-
+                if(removeList) {
+                    String removeCountryName = countryList.get(position).getName();
+                    //myViewModel.setRemoveListBySP(removeCountryName);
+                    myViewModel.setRemoveListByFile(removeCountryName);
                 }
 
                 // ************ lab 8

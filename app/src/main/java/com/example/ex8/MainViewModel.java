@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class MainViewModel extends AndroidViewModel {
@@ -39,7 +41,7 @@ public class MainViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> saveRemoved;
     private MutableLiveData<ArrayList<String>> removedCountries;
     private int[] intArr;
-
+    private ArrayList<String> removedCountryList = new ArrayList<>();
 
 
 
@@ -110,36 +112,24 @@ public class MainViewModel extends AndroidViewModel {
     public void checkRemoveList(Application application){
         ArrayList<Country> countryList = CountryXMLParser.parseCountries(application);
 
+
         if(saveRemoved.getValue()) {
 
             String s = getRemoveListByFile();
             //String s = getRemoveListBySP();
 
             String[] removeArray = s.split(",",countryList.size());
-            int[] intArr = new int[removeArray.length];
-
-            int j=0;
-            for(int i=0 ; i < removeArray.length ; i++) {
-                if( !removeArray[i].equals("") ) {
-                    if( !Arrays.asList(intArr).contains(Integer.parseInt(removeArray[i])) ) {
-                        intArr[j]= Integer.parseInt(removeArray[i]);
-                        j++;
-                    }
+                for(int i = 0; i < removeArray.length; i++) {
+                    int finalI = i;
+                    countryList.removeIf(obj -> obj.getName().equals(removeArray[finalI]));
                 }
-            }
-
-            Arrays.sort(intArr);
-            for(int i = intArr.length-1 ; i>=0 ; i--) {
-                countryList.remove(intArr[i]);
-            }
-        }
-        else {
+        }else{// clear files
             clearListByFile();
             //clearListBySP();
         }
-
-
         countryLiveData.setValue(countryList);
+
+
     }
 
     // ******************** file ************
@@ -166,15 +156,15 @@ public class MainViewModel extends AndroidViewModel {
         return ret;
     }
 
-    public void setRemoveListByFile(String index)
+    public void setRemoveListByFile(String name)
     {
-        if(!Arrays.asList(intArr).contains(Integer.parseInt(index)))
-        {
+        if(!removedCountryList.contains(name)){
             String removelist = getRemoveListByFile();
             if(removelist.length() == 0)
-                removelist = index;
-            else
-                removelist += "," + index;
+                removelist = name;
+            else{
+                removelist += "," + name;
+            }
             try {
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("remove.txt", Context.MODE_PRIVATE));
                 outputStreamWriter.write(removelist);
@@ -204,25 +194,23 @@ public class MainViewModel extends AndroidViewModel {
 
 
     // ******************* SP **********************
-    public void setRemoveListBySP(String index)
-    {
-        {
-            if(!Arrays.asList(intArr).contains(Integer.parseInt(index)))
-            {
-                String removelist = getRemoveListBySP();
-                if(removelist.length() == 0)
-                    removelist = index;
-                else
-                    removelist += "," + index;
-                SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("removelist", removelist);
-                editor.apply();
-            }
+    public void setRemoveListBySP(String name) {
+
+        if (!removedCountryList.contains(name)) {
+            String removelist = getRemoveListBySP();
+            if (removelist.length() == 0)
+                removelist = name;
+            else
+                removelist += "," + name;
+
+            SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("removelist", removelist);
+            editor.apply();
+
         }
-
-
     }
+
     public String getRemoveListBySP() {
 
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);

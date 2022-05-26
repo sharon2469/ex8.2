@@ -3,7 +3,7 @@
     <style name="Theme.Ex8" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
 
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/purple_700</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
 
@@ -20,9 +20,9 @@
     <style name="SettingsDialog" parent="Theme.AppCompat.Light.Dialog.Alert"> <!-- Used for the buttons -->
         <item name="android:textStyle">bold</item>
         <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorPrimary">#9C27B0</item>
         <!-- Used for the background -->
-        <item name="android:background">#D0CFD3</item>
+        <item name="android:background">#6136E1</item>
     </style>
 
 </resources>

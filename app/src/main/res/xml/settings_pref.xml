@@ -8,4 +8,5 @@
         android:defaultValue="false"
         android:key="remember"
         android:title="Remember removed countries ?" />
+
 </PreferenceScreen>
